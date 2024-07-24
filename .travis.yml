@@ -13,3 +13,27 @@ script:
   # run test; note we need the env "CI=true", otherwise run would
   # not end up because npm run test by default runs interactively
   - docker run -e CI=true skrlivoj/docker-remote npm run test
+
+deploy:
+  # Travis supports handful of providers, also AWS Elastic Beanstalk
+  provider: elasticbeanstalk
+  # AWS Region where application is prepared in AWS
+  region: "eu-north-1"
+  # Application name as referred in AWS/Elastic Beanstalk's Applications
+  app: "frontend"
+  # Application environment as referred in AWS/Elastic Beanstalk's Environments
+  env: "Frontend-env"
+  # S3 Bucket in AWS where deployment ZIP is uploaded;
+  # the name starts with "elasticbeanstalk" and contains region in it
+  bucket_name: "elasticbeanstalk-eu-north-1-142732266868"
+  # S3 bucket is used by multiple projects, the actual path is app name above
+  bucket_path: "frontend"
+  # deploy should occur only when change is to master branch (merging PR)
+  on:
+    branch: master
+  # AWS access key ID of user that will login to AWS to do the deploy
+  # value will be retrieved from Travis Environment variables
+  access_key_id: $AWS_ACCESS_KEY
+  # AWS secret access key of user that will login to AWS to do the deploy
+  # value will be retrieved from Travis Environment variables
+  secret_access_key: "$AWS_SECRET_KEY"

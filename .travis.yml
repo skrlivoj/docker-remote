@@ -1,0 +1,15 @@
+# we need Linux sudo to perform most of the steps
+sudo: required
+
+services:
+  # instruct Travis to enable Docker CLI
+  - docker
+
+before_install:
+  # build image to be possible to run test
+  - docker build -t skrlivoj/docker-remote -f Dockerfile.dev .
+
+script:
+  # run test; note we need the env "CI=true", otherwise run would
+  # not end up because npm run test by default runs interactively
+  - docker run -e CI=true skrlivoj/docker-remote npm run test
